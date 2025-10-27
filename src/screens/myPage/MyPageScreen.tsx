@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const MyPageScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>MyPageScreen</Text>
     </View>
   );
@@ -17,4 +17,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-    
