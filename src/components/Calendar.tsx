@@ -10,14 +10,26 @@ import { WEEK_DAYS } from '../constants/date';
 import { formatMonthYear, generateCalendarMatrix } from '../utils/date';
 import { COLORS } from '../constants/colors';
 import { getDisplayDay, isOtherMonthDay } from '../helpers/calendar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const TODAY = new Date();
 
 const Calendar = () => {
-  const today = new Date();
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(TODAY);
+  const [viewMonth, setViewMonth] = useState(TODAY);
   const matrix = generateCalendarMatrix(
-    selectedDate.getFullYear(),
-    selectedDate.getMonth(),
+    viewMonth.getFullYear(),
+    viewMonth.getMonth(),
   );
+  const { width } = Dimensions.get('window');
+  const dayWidth = (width - 40) / 7;
+
+  // 월 변경 함수
+  const changeMonth = (direction: number) => {
+    const newDate = new Date(viewMonth);
+    newDate.setMonth(viewMonth.getMonth() + direction);
+    setViewMonth(newDate);
+  };
 
   // 날짜 선택 함수
   const selectDate = (day: number) => {
@@ -27,14 +39,24 @@ const Calendar = () => {
       setSelectedDate(newDate);
     }
   };
-  const { width } = Dimensions.get('window');
-  const dayWidth = (width - 40) / 7;
 
   return (
     <View style={styles.container}>
       {/* 헤더 */}
       <View style={styles.header}>
-        <Text style={styles.monthYear}>{formatMonthYear(selectedDate)}</Text>
+        <TouchableOpacity onPress={() => changeMonth(-1)}>
+          <Ionicons name="chevron-back" size={24} color={COLORS.LIGHT_BLUE} />
+        </TouchableOpacity>
+
+        <Text style={styles.monthYear}>{formatMonthYear(viewMonth)}</Text>
+
+        <TouchableOpacity onPress={() => changeMonth(1)}>
+          <Ionicons
+            name="chevron-forward"
+            size={24}
+            color={COLORS.LIGHT_BLUE}
+          />
+        </TouchableOpacity>
       </View>
 
       {/* 캘린더 그리드 */}
@@ -60,7 +82,10 @@ const Calendar = () => {
             <View key={rowIndex} style={styles.row}>
               {row.map((day, colIndex) => {
                 const isOtherMonth = isOtherMonthDay(day);
-                const isSelectedDay = day === selectedDate.getDate();
+                const isSelectedDay =
+                  day === selectedDate.getDate() &&
+                  viewMonth.getMonth() === selectedDate.getMonth() &&
+                  viewMonth.getFullYear() === selectedDate.getFullYear();
                 const displayDay = getDisplayDay(day);
 
                 return (
@@ -100,13 +125,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 10,
+    paddingHorizontal: 15,
   },
   monthYear: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '500',
     color: COLORS.DARK_GRAY,
   },
   calendar: {
