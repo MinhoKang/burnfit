@@ -33,11 +33,19 @@ const Calendar = () => {
 
   // 날짜 선택 함수
   const selectDate = (day: number) => {
-    if (day > 0 && day < 100) {
-      const newDate = new Date(selectedDate);
+    const newDate = new Date(viewMonth);
+
+    if (day < 0) {
+      newDate.setMonth(viewMonth.getMonth() - 1);
+      newDate.setDate(-day);
+    } else if (day > 100) {
+      newDate.setMonth(viewMonth.getMonth() + 1);
+      newDate.setDate(day - 100);
+    } else {
       newDate.setDate(day);
-      setSelectedDate(newDate);
     }
+
+    setSelectedDate(newDate);
   };
 
   return (
