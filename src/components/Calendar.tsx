@@ -141,13 +141,12 @@ const Calendar = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    gap: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-    marginTop: 10,
     paddingHorizontal: 15,
   },
   monthYear: {
@@ -162,7 +161,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 8,
   },
   dayContainer: {
     justifyContent: 'center',
