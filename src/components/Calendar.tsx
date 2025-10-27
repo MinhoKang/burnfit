@@ -9,6 +9,7 @@ import {
 import { WEEK_DAYS } from '../constants/date';
 import { formatMonthYear, generateCalendarMatrix } from '../utils/date';
 import { COLORS } from '../constants/colors';
+import { getDisplayDay, isOtherMonthDay } from '../helpers/calendar';
 
 const Calendar = () => {
   const today = new Date();
@@ -16,7 +17,6 @@ const Calendar = () => {
   const matrix = generateCalendarMatrix(
     selectedDate.getFullYear(),
     selectedDate.getMonth(),
-    WEEK_DAYS,
   );
 
   // 날짜 선택 함수
@@ -39,48 +39,56 @@ const Calendar = () => {
 
       {/* 캘린더 그리드 */}
       <View style={styles.calendar}>
-        {matrix.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.row}>
-            {row.map((item, colIndex) => {
-              const day = typeof item === 'number' ? item : Number(item);
-              const isHeader = rowIndex === 0;
-              const isSunday = colIndex === 0;
-              const isSaturday = colIndex === 6;
+        {/* 요일 헤더 */}
+        <View style={styles.row}>
+          {WEEK_DAYS.map((day, index) => (
+            <View key={day} style={[styles.dayContainer, { width: dayWidth }]}>
+              <Text
+                style={[
+                  styles.headerText,
+                  index === 0 && styles.sundayText,
+                  index === 6 && styles.saturdayText,
+                ]}
+              >
+                {day}
+              </Text>
+            </View>
+          ))}
+        </View>
+        <View>
+          {matrix.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.row}>
+              {row.map((day, colIndex) => {
+                const isOtherMonth = isOtherMonthDay(day);
+                const isSelectedDay = day === selectedDate.getDate();
+                const displayDay = getDisplayDay(day);
 
-              const isOtherMonth = day < 0 || day > 100;
-
-              const isSelectedDay = day === selectedDate.getDate();
-
-              const displayDay = day < 0 ? -day : day > 100 ? day - 100 : day;
-
-              return (
-                <TouchableOpacity
-                  key={colIndex}
-                  style={[
-                    styles.dayContainer,
-                    { width: dayWidth, height: isHeader ? 'auto' : dayWidth },
-                  ]}
-                  onPress={() => selectDate(day)}
-                >
-                  <View style={isSelectedDay && styles.selectedDayContainer}>
-                    <Text
-                      style={[
-                        styles.dayText,
-                        isHeader && styles.headerText,
-                        isSunday && isHeader && styles.sundayText,
-                        isSaturday && isHeader && styles.saturdayText,
-                        isOtherMonth && styles.otherMonthText,
-                        isSelectedDay && styles.selectedDayText,
-                      ]}
-                    >
-                      {displayDay}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        ))}
+                return (
+                  <TouchableOpacity
+                    key={colIndex}
+                    style={[
+                      styles.dayContainer,
+                      { width: dayWidth, height: dayWidth },
+                    ]}
+                    onPress={() => selectDate(Number(day))}
+                  >
+                    <View style={isSelectedDay && styles.selectedDayContainer}>
+                      <Text
+                        style={[
+                          styles.dayText,
+                          isOtherMonth && styles.otherMonthText,
+                          isSelectedDay && styles.selectedDayText,
+                        ]}
+                      >
+                        {displayDay}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -103,6 +111,7 @@ const styles = StyleSheet.create({
   },
   calendar: {
     marginTop: 10,
+    gap: 10,
   },
   row: {
     flexDirection: 'row',
