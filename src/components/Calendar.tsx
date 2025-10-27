@@ -9,7 +9,11 @@ import {
 import { WEEK_DAYS } from '../constants/date';
 import { formatMonthYear, generateCalendarMatrix } from '../utils/date';
 import { COLORS } from '../constants/colors';
-import { getDisplayDay, isOtherMonthDay } from '../helpers/calendar';
+import {
+  checkIsSelectedDay,
+  getDisplayDay,
+  isOtherMonthDay,
+} from '../helpers/calendar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TODAY = new Date();
@@ -36,16 +40,22 @@ const Calendar = () => {
     const newDate = new Date(viewMonth);
 
     if (day < 0) {
+      // 이전 달 날짜 클릭
       newDate.setMonth(viewMonth.getMonth() - 1);
       newDate.setDate(-day);
+      setSelectedDate(newDate);
+      setViewMonth(newDate);
     } else if (day > 100) {
+      // 다음 달 날짜 클릭
       newDate.setMonth(viewMonth.getMonth() + 1);
       newDate.setDate(day - 100);
+      setSelectedDate(newDate);
+      setViewMonth(newDate);
     } else {
+      // 현재 달 날짜 클릭
       newDate.setDate(day);
+      setSelectedDate(newDate);
     }
-
-    setSelectedDate(newDate);
   };
 
   return (
@@ -90,10 +100,11 @@ const Calendar = () => {
             <View key={rowIndex} style={styles.row}>
               {row.map((day, colIndex) => {
                 const isOtherMonth = isOtherMonthDay(day);
-                const isSelectedDay =
-                  day === selectedDate.getDate() &&
-                  viewMonth.getMonth() === selectedDate.getMonth() &&
-                  viewMonth.getFullYear() === selectedDate.getFullYear();
+                const isSelectedDay = checkIsSelectedDay(
+                  day,
+                  viewMonth,
+                  selectedDate,
+                );
                 const displayDay = getDisplayDay(day);
 
                 return (
