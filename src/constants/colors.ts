@@ -5,4 +5,5 @@ export const COLORS = {
   DARK_GRAY: '#4E4E4E',
   LIGHT_GRAY: '#E3E6EA',
   GRAY: '#BFC3C4',
+  NAVY: '#34424B',
 };

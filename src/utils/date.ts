@@ -45,3 +45,19 @@ export const formatMonthYear = (date: Date): string => {
     year: 'numeric',
   });
 };
+
+// 오늘 날짜 확인
+export const checkIsToday = (
+  day: number,
+  currentMonth: number,
+  currentYear: number,
+): boolean => {
+  const today = new Date();
+  return (
+    day > 0 &&
+    day < 100 &&
+    day === today.getDate() &&
+    currentMonth === today.getMonth() &&
+    currentYear === today.getFullYear()
+  );
+};
