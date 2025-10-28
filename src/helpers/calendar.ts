@@ -1,3 +1,5 @@
+import { getDaysInMonth } from '../utils/date';
+
 export const isOtherMonthDay = (day: number | string): boolean => {
   return typeof day === 'number' && (day < 0 || day > 100);
 };
@@ -43,4 +45,65 @@ export const checkIsSelectedDay = (
     viewMonth.getMonth() === selectedDate.getMonth() &&
     viewMonth.getFullYear() === selectedDate.getFullYear()
   );
+};
+
+export const generateWeekCalendarMatrix = (date: Date): number[] => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  // 선택된 날짜가 속한 주의 일요일 찾기
+  const currentDate = new Date(year, month, day);
+  const dayOfWeek = currentDate.getDay();
+  const sundayDate = new Date(currentDate);
+  sundayDate.setDate(day - dayOfWeek);
+
+  // 일주일 생성
+  const week = Array.from({ length: 7 }, (_, index) => {
+    const weekDate = new Date(sundayDate);
+    weekDate.setDate(sundayDate.getDate() + index);
+
+    const weekDay = weekDate.getDate();
+    const weekMonth = weekDate.getMonth();
+
+    // 다른 달이면 음수 또는 100+ 처리
+    if (weekMonth < month) {
+      return -weekDay;
+    }
+    if (weekMonth > month) {
+      return 100 + weekDay;
+    }
+    return weekDay;
+  });
+
+  return week;
+};
+
+// 캘린더 매트릭스 생성
+export const generateCalendarMatrix = (
+  year: number,
+  month: number,
+): number[][] => {
+  const firstDay = new Date(year, month, 1).getDay();
+  const maxDays = getDaysInMonth(year, month);
+  const prevMonthDays = getDaysInMonth(year, month - 1);
+
+  const totalCells = firstDay + maxDays;
+  const weeksNeeded = Math.ceil(totalCells / 7);
+
+  const dateRows = Array.from({ length: weeksNeeded }, (_, rowIndex) => {
+    return Array.from({ length: 7 }, (_, colIndex) => {
+      const dayNumber = rowIndex * 7 + colIndex - firstDay + 1;
+
+      if (dayNumber < 1) {
+        return -(prevMonthDays + dayNumber);
+      }
+      if (dayNumber > maxDays) {
+        return 100 + (dayNumber - maxDays);
+      }
+      return dayNumber;
+    });
+  });
+
+  return dateRows;
 };

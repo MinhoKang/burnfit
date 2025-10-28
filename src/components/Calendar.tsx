@@ -7,24 +7,34 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { WEEK_DAYS } from '../constants/date';
-import { formatMonthYear, generateCalendarMatrix } from '../utils/date';
+import { formatMonthYear } from '../utils/date';
 import { COLORS } from '../constants/colors';
 import {
   checkIsSelectedDay,
   getDisplayDay,
   isOtherMonthDay,
+  generateCalendarMatrix,
+  generateWeekCalendarMatrix,
 } from '../helpers/calendar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TODAY = new Date();
+type CalendarMode = 'month' | 'week';
 
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(TODAY);
   const [viewMonth, setViewMonth] = useState(TODAY);
-  const matrix = generateCalendarMatrix(
+  const [mode, setMode] = useState<CalendarMode>('month');
+
+  const monthMatrix = generateCalendarMatrix(
     viewMonth.getFullYear(),
     viewMonth.getMonth(),
   );
+
+  const weekMatrix = [generateWeekCalendarMatrix(selectedDate)];
+
+  const matrix = mode === 'month' ? monthMatrix : weekMatrix;
+
   const { width } = Dimensions.get('window');
   const dayWidth = (width - 40) / 7;
 
@@ -77,10 +87,9 @@ const Calendar = () => {
         </TouchableOpacity>
       </View>
 
-      {/* 캘린더 그리드 */}
-      <View style={styles.calendar}>
+      <View>
         {/* 요일 헤더 */}
-        <View style={styles.row}>
+        <View style={styles.weekHeader}>
           {WEEK_DAYS.map((day, index) => (
             <View key={day} style={[styles.dayContainer, { width: dayWidth }]}>
               <Text
@@ -95,44 +104,55 @@ const Calendar = () => {
             </View>
           ))}
         </View>
-        <View>
-          {matrix.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-              {row.map((day, colIndex) => {
-                const isOtherMonth = isOtherMonthDay(day);
-                const isSelectedDay = checkIsSelectedDay(
-                  day,
-                  viewMonth,
-                  selectedDate,
-                );
-                const displayDay = getDisplayDay(day);
 
-                return (
-                  <TouchableOpacity
-                    key={colIndex}
-                    style={[
-                      styles.dayContainer,
-                      { width: dayWidth, height: dayWidth },
-                    ]}
-                    onPress={() => selectDate(Number(day))}
-                  >
-                    <View style={isSelectedDay && styles.selectedDayContainer}>
-                      <Text
-                        style={[
-                          styles.dayText,
-                          isOtherMonth && styles.otherMonthText,
-                          isSelectedDay && styles.selectedDayText,
-                        ]}
+        {/* 캘린더 그리드 */}
+        <View style={styles.calendar}>
+          <View>
+            {matrix.map((row, rowIndex) => (
+              <View key={rowIndex} style={styles.row}>
+                {row.map((day, colIndex) => {
+                  const isOtherMonth = isOtherMonthDay(day);
+                  const isSelectedDay = checkIsSelectedDay(
+                    day,
+                    viewMonth,
+                    selectedDate,
+                  );
+                  const displayDay = getDisplayDay(day);
+
+                  return (
+                    <TouchableOpacity
+                      key={colIndex}
+                      style={[
+                        styles.dayContainer,
+                        { width: dayWidth, height: dayWidth },
+                      ]}
+                      onPress={() => selectDate(Number(day))}
+                    >
+                      <View
+                        style={isSelectedDay && styles.selectedDayContainer}
                       >
-                        {displayDay}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          ))}
+                        <Text
+                          style={[
+                            styles.dayText,
+                            isOtherMonth && styles.otherMonthText,
+                            isSelectedDay && styles.selectedDayText,
+                          ]}
+                        >
+                          {displayDay}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ))}
+          </View>
         </View>
+        <TouchableOpacity
+          onPress={() => setMode(mode === 'month' ? 'week' : 'month')}
+        >
+          <Text>Toggle: {mode}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -141,7 +161,7 @@ const Calendar = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    gap: 10,
+    gap: 15,
   },
   header: {
     flexDirection: 'row',
@@ -154,10 +174,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: COLORS.DARK_GRAY,
   },
-  calendar: {
-    marginTop: 10,
-    gap: 10,
-  },
+  calendar: {},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -199,6 +216,10 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  weekHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
 
