@@ -2,10 +2,11 @@ task
 
 # BurnFit
 
-번핀 과제 프로젝트입니다.
+번핏 과제 프로젝트입니다.
 
 ## 📋 목차
 
+- [작동 화면](#작동-화면)
 - [주요 기능](#주요-기능)
 - [기술 스택](#기술-스택)
 - [핵심 구현 로직](#핵심-구현-로직)
@@ -13,6 +14,16 @@ task
 - [시작하기](#시작하기)
 
 ---
+
+## 작동 화면
+
+### Fold(Google Pixel Fold)
+
+<img src="https://github.com/user-attachments/assets/96a3bf8f-d286-4a96-9134-8153ed0e84b0" alt="demo" width="600">
+
+### ios(iPhone 17 Pro)
+
+<img src="https://github.com/user-attachments/assets/21dcfb2d-ba5c-45ae-aca7-c6a4aff05e09" alt="demo" width="600">
 
 ## 주요 기능
 
@@ -697,7 +708,6 @@ scheduleOnRN(changeMonth, direction);
 ```
 
 ---
-
 
 ## 문제 해결 (Troubleshooting)
 
