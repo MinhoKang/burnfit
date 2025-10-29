@@ -23,6 +23,7 @@ export const CalendarItem = React.memo(
     selectDate,
     dayWidth,
     rowStyles,
+    themeColors,
   }: {
     rowIndex: number;
     row: number[];
@@ -31,6 +32,7 @@ export const CalendarItem = React.memo(
     selectDate: (day: number) => void;
     dayWidth: number;
     rowStyles: StyleProp<ViewStyle>[];
+    themeColors: { TEXT: string; TEXT_SECONDARY: string; BORDER: string };
   }) => {
     return (
       <Animated.View
@@ -56,11 +58,12 @@ export const CalendarItem = React.memo(
               onPress={() => selectDate(Number(day))}
             >
               <View
-                style={isSelectedDay && CALENDAR_STYLES.selectedDayContainer}
+                style={[isSelectedDay && CALENDAR_STYLES.selectedDayContainer]}
               >
                 <Text
                   style={[
                     CALENDAR_STYLES.dayText,
+                    { color: themeColors.TEXT },
                     isOtherMonth && CALENDAR_STYLES.otherMonthText,
                     isSelectedDay && CALENDAR_STYLES.selectedDayText,
                   ]}

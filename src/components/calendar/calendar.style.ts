@@ -54,11 +54,12 @@ export const CALENDAR_STYLES = StyleSheet.create({
     color: COLORS.LIGHT_GRAY,
   },
   selectedDayText: {
-    color: COLORS.NAVY,
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   selectedDayContainer: {
     borderColor: COLORS.LIGHT_BLUE,
+    backgroundColor: COLORS.LIGHT_BLUE,
     borderWidth: 1,
     borderRadius: 50,
     padding: 8,

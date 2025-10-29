@@ -9,14 +9,13 @@ import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useCalendarLogic } from '../../hooks/calendar/useCalendarLogic';
 import { useCalendarAnimation } from '../../hooks/calendar/useCalendarAnimation';
-import { COLORS } from '../../constants/colors';
+import { COLORS, getThemeColors } from '../../constants/colors';
 import { CALENDAR_STYLES } from './calendar.style';
 import { CalendarItem } from './CalendarItem';
 import { useSettingsStore } from '../../stores/useSettingStore';
 import { useMemo } from 'react';
-
-const WEEK_DAYS_SUN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const WEEK_DAYS_MON = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+import { useShallow } from 'zustand/react/shallow';
+import { WEEK_DAYS_MON, WEEK_DAYS_SUN } from '../../constants/date';
 
 const Calendar = () => {
   const logic = useCalendarLogic();
@@ -31,7 +30,17 @@ const Calendar = () => {
     dateHelpers,
     headerText,
   } = logic;
-  const { startOfWeek } = useSettingsStore();
+  const { startOfWeek, themeMode } = useSettingsStore(
+    useShallow(state => ({
+      startOfWeek: state.startOfWeek,
+      themeMode: state.themeMode,
+    })),
+  );
+  const themeColors = useMemo(() => getThemeColors(themeMode), [themeMode]);
+  const iconColor = useMemo(
+    () => (themeMode === 'light' ? COLORS.LIGHT_BLUE : COLORS.LIGHT_BLUE),
+    [themeMode],
+  );
 
   const { width } = useWindowDimensions();
   const dayWidth = (width - 40) / 7;
@@ -50,23 +59,26 @@ const Calendar = () => {
   } = animation;
 
   return (
-    <View style={CALENDAR_STYLES.container}>
+    <View
+      style={[
+        CALENDAR_STYLES.container,
+        { backgroundColor: themeColors.BACKGROUND },
+      ]}
+    >
       {/* 헤더 */}
       <View style={CALENDAR_STYLES.header}>
         <TouchableOpacity
           onPress={() => (mode === 'month' ? changeMonth(-1) : changeWeek(-1))}
         >
-          <Ionicons name="chevron-back" size={24} color={COLORS.LIGHT_BLUE} />
+          <Ionicons name="chevron-back" size={24} color={iconColor} />
         </TouchableOpacity>
-        <Text style={CALENDAR_STYLES.monthYear}>{headerText}</Text>
+        <Text style={[CALENDAR_STYLES.monthYear, { color: themeColors.TEXT }]}>
+          {headerText}
+        </Text>
         <TouchableOpacity
           onPress={() => (mode === 'month' ? changeMonth(1) : changeWeek(1))}
         >
-          <Ionicons
-            name="chevron-forward"
-            size={24}
-            color={COLORS.LIGHT_BLUE}
-          />
+          <Ionicons name="chevron-forward" size={24} color={iconColor} />
         </TouchableOpacity>
       </View>
 
@@ -80,21 +92,20 @@ const Calendar = () => {
             <Text
               style={[
                 CALENDAR_STYLES.headerText,
-                // ✅ 일요일(startOfWeek: 0) 시작일 때:
+                { color: themeColors.TEXT_SECONDARY },
                 startOfWeek === 'sunday' &&
                   index === 0 &&
-                  CALENDAR_STYLES.sundayText, // 0번째(Sun)가 빨간색
+                  CALENDAR_STYLES.sundayText,
                 startOfWeek === 'sunday' &&
                   index === 6 &&
-                  CALENDAR_STYLES.saturdayText, // 6번째(Sat)가 파란색
+                  CALENDAR_STYLES.saturdayText,
 
-                // ✅ 월요일(startOfWeek: 1) 시작일 때:
                 startOfWeek === 'monday' &&
                   index === 6 &&
-                  CALENDAR_STYLES.sundayText, // 6번째(Sun)가 빨간색
+                  CALENDAR_STYLES.sundayText,
                 startOfWeek === 'monday' &&
                   index === 5 &&
-                  CALENDAR_STYLES.saturdayText, // 5번째(Sat)가 파란색
+                  CALENDAR_STYLES.saturdayText,
               ]}
             >
               {day}
@@ -125,6 +136,7 @@ const Calendar = () => {
                   selectDate={selectDate}
                   dayWidth={dayWidth}
                   rowStyles={rowStyles}
+                  themeColors={themeColors}
                 />
               ))}
             </View>
@@ -141,6 +153,7 @@ const Calendar = () => {
                   selectDate={selectDate}
                   dayWidth={dayWidth}
                   rowStyles={rowStyles}
+                  themeColors={themeColors}
                 />
               ))}
             </View>
@@ -161,6 +174,7 @@ const Calendar = () => {
                   selectDate={selectDate}
                   dayWidth={dayWidth}
                   rowStyles={rowStyles}
+                  themeColors={themeColors}
                 />
               ))}
             </View>
