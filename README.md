@@ -1,97 +1,188 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# BurnFit
 
-# Getting Started
+요구사항 외에 있으면 좋을 기능들을 추가했습니다.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+- 시작 요일 설정 기능: MyPage에서 시작 요일 설정 가능
+- 다크모드: MyPage에서 다크모드 설정 가능
+- 폴더블 대응: 너비 800px 이상일 때 50px로 설정
+- 오늘 날짜로 바로 가기: 달력의 오른쪽 상단에 버튼으로 이동
 
-## Step 1: Start Metro
+시작 요일과 다크모드는 앱이 백그라운드로 가거나 꺼졌을 떄도 유지하기 위해 AsyncStorage를 사용했습니다.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 시작 요일 설정 + 다크모드
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 상태 관리 (Zustand + AsyncStorage)
 
-```sh
-# Using npm
-npm start
+#### 스토어 구조
 
-# OR using Yarn
-yarn start
+```typescript
+interface SettingsState {
+  startOfWeek: 'sunday' | 'monday'; // 주 시작일
+  setStartOfWeek: (day: StartDayOfWeek) => void;
+  themeMode: 'light' | 'dark'; // 테마 모드
+  setThemeMode: (mode: ThemeMode) => void;
+}
 ```
 
-## Step 2: Build and run your app
+#### 영구 저장 구현
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```typescript
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    set => ({
+      startOfWeek: 'sunday',
+      setStartOfWeek: day => set({ startOfWeek: day }),
+      themeMode: 'light',
+      setThemeMode: mode => set({ themeMode: mode }),
+    }),
+    {
+      name: 'calendar-settings-storage', // AsyncStorage 키
+      storage: createJSONStorage(() => AsyncStorage),
+    },
+  ),
+);
 ```
 
-### iOS
+#### 사용 예시 (최적화)
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+```typescript
+// useShallow로 불필요한 리렌더링 방지
+const { startOfWeek, themeMode } = useSettingsStore(
+  useShallow(state => ({
+    startOfWeek: state.startOfWeek,
+    themeMode: state.themeMode,
+  })),
+);
 ```
 
-Then, and every time you update your native dependencies, run:
+---
 
-```sh
-bundle exec pod install
+### 다크모드
+
+#### 색상 정의
+
+```typescript
+export const COLORS = {
+  LIGHT_BLUE: '#12C1E8',
+
+  LIGHT: {
+    BACKGROUND: '#FFFFFF',
+    TEXT: '#000000',
+    TEXT_SECONDARY: '#4E4E4E',
+    CARD_BACKGROUND: '#FFFFFF',
+    BORDER: '#E3E6EA',
+  },
+  DARK: {
+    BACKGROUND: '#121212',
+    TEXT: '#FFFFFF',
+    TEXT_SECONDARY: '#B0B0B0',
+    CARD_BACKGROUND: '#1E1E1E',
+    BORDER: '#2C2C2C',
+  },
+};
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+#### 테마 적용
+
+```typescript
+// 테마 색상 가져오기
+const themeColors = getThemeColors(themeMode);
+
+// 스타일 적용
+<View style={{ backgroundColor: themeColors.BACKGROUND }}>
+  <Text style={{ color: themeColors.TEXT }}>Hello</Text>
+</View>;
+```
+
+### 시작 요일 설정
+
+#### 핵심 함수: `generateCalendarMatrix()`
+
+**목적**: 특정 년/월에 대한 6주 x 7일 캘린더 매트릭스 생성
+
+**날짜 인코딩 규칙** (다른 달 날짜 구분을 위한 특수 인코딩):
+
+```typescript
+// 이전 달 날짜: 음수로 표현
+// 예: 이전 달 30일 → -30, 31일 → -31
+
+// 현재 달 날짜: 그대로 표현
+// 예: 1일 → 1, 15일 → 15, 31일 → 31
+
+// 다음 달 날짜: 100 + 날짜로 표현
+// 예: 다음 달 1일 → 101, 2일 → 102
+```
+
+**예시 출력** (2025년 10월, 일요일 시작):
+
+```typescript
+[
+  [-29, -30, -31, 1, 2, 3, 4], // 1주차: 9월 29~31일, 10월 1~4일
+  [5, 6, 7, 8, 9, 10, 11], // 2주차: 10월 5~11일
+  [12, 13, 14, 15, 16, 17, 18], // 3주차: 10월 12~18일
+  [19, 20, 21, 22, 23, 24, 25], // 4주차: 10월 19~25일
+  [26, 27, 28, 29, 30, 31, 101], // 5주차: 10월 26~31일, 11월 1일
+  [102, 103, 104, 105, 106, 107, 108], // 6주차: 11월 2~8일
+];
+```
+
+**주 시작일 처리**:
+
+```typescript
+// 일요일 시작: 0 = 일요일
+const firstDayIndex = firstDayIndexofMonth;
+
+// 월요일 시작: 0 = 월요일
+const firstDayIndex = (firstDayIndexofMonth + 6) % 7;
+```
+
+## 문제 해결 (Troubleshooting)
+
+### iOS 빌드 실패
 
 ```sh
-# Using npm
+cd ios
+pod deintegrate
+pod install
+cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Metro 캐시 문제
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```sh
+npm start -- --reset-cache
+```
 
-## Step 3: Modify your app
+### Android 빌드 실패
 
-Now that you have successfully run the app, let's make changes!
+```sh
+cd android
+./gradlew clean
+cd ..
+npm run android
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+---
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 트러블 슈팅
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### 폴더블 대응
 
-## Congratulations! :tada:
+기존 코드
 
-You've successfully run and modified your React Native App. :partying_face:
+```typescript
+const dayWidth = (width - 40) / 7;
+```
 
-### Now what?
+이렇게 되면 하나의 날짜의 너비가 100px 이상이 되고, 폴더블 폰을 펼칠 때 화면이 깨지는 문제가 발생했습니다.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+폴더블 대응을 위해 800px 이상일 때 50px로 설정하니 문제가 해결되었습니다.
 
-# Troubleshooting
+```typescript
+const dayWidth = width > 800 ? 50 : (width - 40) / 7;
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### 다크모드
 
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+기존에는 react-navigation의 static api를 사용했으나, 바텀탭 다크모드 설정에 어려움이 있어 비교적 다크모드 설정이 용이한 dynamic api를 사용했습니다.
