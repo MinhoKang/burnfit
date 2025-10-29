@@ -9,6 +9,14 @@
 
 시작 요일과 다크모드는 앱이 백그라운드로 가거나 꺼졌을 떄도 유지하기 위해 AsyncStorage를 사용했습니다.
 
+## 영상
+### Fold(Google Pixel Fold)
+<img src="https://github.com/user-attachments/assets/7fdba0b5-fc83-4677-84ac-286cd930aa92" alt="demo" width="600">
+
+### ios(iPhone 17 Pro)
+
+<img src="https://github.com/user-attachments/assets/e374f22a-11e5-445f-b1b5-579ac1fa8ae0" alt="demo" width="600">
+
 ## 시작 요일 설정 + 다크모드
 
 ### 상태 관리 (Zustand + AsyncStorage)
