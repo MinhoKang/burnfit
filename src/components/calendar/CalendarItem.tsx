@@ -13,6 +13,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { COLORS } from '../../constants/colors';
+import { ThemeMode } from '../../types/theme';
 
 export const CalendarItem = React.memo(
   ({
@@ -23,7 +25,7 @@ export const CalendarItem = React.memo(
     selectDate,
     dayWidth,
     rowStyles,
-    themeColors,
+    themeMode,
   }: {
     rowIndex: number;
     row: number[];
@@ -32,7 +34,7 @@ export const CalendarItem = React.memo(
     selectDate: (day: number) => void;
     dayWidth: number;
     rowStyles: StyleProp<ViewStyle>[];
-    themeColors: { TEXT: string; TEXT_SECONDARY: string; BORDER: string };
+    themeMode: ThemeMode;
   }) => {
     return (
       <Animated.View
@@ -62,9 +64,28 @@ export const CalendarItem = React.memo(
               >
                 <Text
                   style={[
-                    CALENDAR_STYLES.dayText,
-                    !isOtherMonth && { color: themeColors.TEXT },
-                    isSelectedDay && { color: themeColors.TEXT },
+                    CALENDAR_STYLES.dayText, // 1. 기본 스타일 적용
+                    // 2. 테마 모드에 따라 스타일 객체 분기
+                    themeMode === 'dark'
+                      ? // --- 다크 모드 스타일 ---
+                        {
+                          // 3. 다른 달 vs 현재 달 색상 결정
+                          color: isOtherMonth ? COLORS.GRAY : COLORS.DARK.TEXT,
+                          // 4. 선택된 날 스타일 적용 (fontWeight 추가, 색상 유지)
+                          ...(isSelectedDay && {
+                            // color: COLORS.DARK.TEXT, // 이미 현재 달 색상이므로 생략 가능
+                            fontWeight: '700',
+                          }),
+                        }
+                      : // --- 라이트 모드 스타일 ---
+                        {
+                          // 3. 다른 달 vs 현재 달 색상 결정
+                          color: isOtherMonth
+                            ? COLORS.LIGHT_GRAY
+                            : COLORS.DARK_GRAY,
+                          // 4. 선택된 날 스타일 적용 (색상 덮어쓰기 + fontWeight 추가)
+                          ...(isSelectedDay && CALENDAR_STYLES.selectedDayText),
+                        },
                   ]}
                 >
                   {displayDay}

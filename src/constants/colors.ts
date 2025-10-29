@@ -3,11 +3,13 @@ import { ThemeMode } from '../types/theme';
 export const COLORS = {
   LIGHT_BLUE: '#12C1E8',
   BLUE: '#4F78A1',
+  DARK_BLUE: '#49759D',
   RED: '#D16763',
   DARK_GRAY: '#4E4E4E',
   LIGHT_GRAY: '#E3E6EA',
   GRAY: '#BFC3C4',
   NAVY: '#34424B',
+  BLACK: '#39474F',
 
   LIGHT: {
     BACKGROUND: '#FFFFFF',

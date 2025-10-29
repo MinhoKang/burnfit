@@ -46,6 +46,8 @@ const Calendar = () => {
   const { width } = useWindowDimensions();
   const dayWidth = (width - 40) / 7;
 
+  console.log(width);
+
   const animation = useCalendarAnimation(logic, width);
 
   const dynamicWeekDays = useMemo(() => {
@@ -148,7 +150,7 @@ const Calendar = () => {
                   selectDate={selectDate}
                   dayWidth={dayWidth}
                   rowStyles={rowStyles}
-                  themeColors={themeColors}
+                  themeMode={themeMode}
                 />
               ))}
             </View>
@@ -165,7 +167,7 @@ const Calendar = () => {
                   selectDate={selectDate}
                   dayWidth={dayWidth}
                   rowStyles={rowStyles}
-                  themeColors={themeColors}
+                  themeMode={themeMode}
                 />
               ))}
             </View>
@@ -186,7 +188,7 @@ const Calendar = () => {
                   selectDate={selectDate}
                   dayWidth={dayWidth}
                   rowStyles={rowStyles}
-                  themeColors={themeColors}
+                  themeMode={themeMode}
                 />
               ))}
             </View>

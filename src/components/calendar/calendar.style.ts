@@ -31,7 +31,6 @@ export const CALENDAR_STYLES = StyleSheet.create({
   calendarsRow: {
     flexDirection: 'row',
   },
-
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -56,18 +55,17 @@ export const CALENDAR_STYLES = StyleSheet.create({
     color: COLORS.RED,
   },
   saturdayText: {
-    color: COLORS.LIGHT_BLUE,
+    color: COLORS.BLACK,
   },
   otherMonthText: {
     color: COLORS.LIGHT_GRAY,
   },
   selectedDayText: {
-    color: '#FFFFFF',
+    color: COLORS.LIGHT.TEXT,
     fontWeight: '700',
   },
   selectedDayContainer: {
-    borderColor: COLORS.LIGHT_BLUE,
-    backgroundColor: COLORS.LIGHT_BLUE,
+    borderColor: COLORS.DARK_BLUE,
     borderWidth: 1,
     borderRadius: 50,
     padding: 8,
