@@ -63,9 +63,8 @@ export const CalendarItem = React.memo(
                 <Text
                   style={[
                     CALENDAR_STYLES.dayText,
-                    { color: themeColors.TEXT },
-                    isOtherMonth && CALENDAR_STYLES.otherMonthText,
-                    isSelectedDay && CALENDAR_STYLES.selectedDayText,
+                    !isOtherMonth && { color: themeColors.TEXT },
+                    isSelectedDay && { color: themeColors.TEXT },
                   ]}
                 >
                   {displayDay}
