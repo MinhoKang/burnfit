@@ -55,7 +55,7 @@ export const CALENDAR_STYLES = StyleSheet.create({
     color: COLORS.RED,
   },
   saturdayText: {
-    color: COLORS.BLACK,
+    color: COLORS.LIGHT_BLUE,
   },
   otherMonthText: {
     color: COLORS.LIGHT_GRAY,

@@ -46,8 +46,6 @@ const Calendar = () => {
   const { width } = useWindowDimensions();
   const dayWidth = (width - 40) / 7;
 
-  console.log(width);
-
   const animation = useCalendarAnimation(logic, width);
 
   const dynamicWeekDays = useMemo(() => {
@@ -106,7 +104,6 @@ const Calendar = () => {
             <Text
               style={[
                 CALENDAR_STYLES.headerText,
-                { color: themeColors.TEXT_SECONDARY },
                 startOfWeek === 'sunday' &&
                   index === 0 &&
                   CALENDAR_STYLES.sundayText,
