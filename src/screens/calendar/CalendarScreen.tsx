@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import Calendar from '../../components/Calendar';
+import Calendar from '../../components/calendar/Calendar';
 
 const CalendarScreen = () => {
   return (

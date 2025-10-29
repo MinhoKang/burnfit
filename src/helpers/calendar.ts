@@ -92,7 +92,7 @@ export const generateCalendarMatrix = (
   const weeksNeeded = Math.ceil(totalCells / 7);
 
   const dateRows = Array.from({ length: weeksNeeded }, (_, rowIndex) => {
-    return Array.from({ length: 7 }, (_, colIndex) => {
+    return Array.from({ length: 7 }, (__, colIndex) => {
       const dayNumber = rowIndex * 7 + colIndex - firstDay + 1;
 
       if (dayNumber < 1) {
