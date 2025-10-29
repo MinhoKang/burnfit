@@ -29,6 +29,7 @@ const Calendar = () => {
     matrices,
     dateHelpers,
     headerText,
+    goToToday,
   } = logic;
   const { startOfWeek, themeMode } = useSettingsStore(
     useShallow(state => ({
@@ -75,11 +76,22 @@ const Calendar = () => {
         <Text style={[CALENDAR_STYLES.monthYear, { color: themeColors.TEXT }]}>
           {headerText}
         </Text>
-        <TouchableOpacity
-          onPress={() => (mode === 'month' ? changeMonth(1) : changeWeek(1))}
-        >
-          <Ionicons name="chevron-forward" size={24} color={iconColor} />
-        </TouchableOpacity>
+        <View style={CALENDAR_STYLES.headerRightGroup}>
+          {/* 3. "오늘" 버튼 추가 */}
+          <TouchableOpacity
+            onPress={goToToday}
+            style={CALENDAR_STYLES.todayButton}
+          >
+            <Ionicons name="today-outline" size={22} color={iconColor} />
+          </TouchableOpacity>
+
+          {/* 다음 버튼 */}
+          <TouchableOpacity
+            onPress={() => (mode === 'month' ? changeMonth(1) : changeWeek(1))}
+          >
+            <Ionicons name="chevron-forward" size={24} color={iconColor} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* 요일 헤더 */}

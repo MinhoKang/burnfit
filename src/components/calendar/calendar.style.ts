@@ -15,6 +15,14 @@ export const CALENDAR_STYLES = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
   },
+  headerRightGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  todayButton: {
+    padding: 2,
+  },
   monthYear: {
     fontSize: 20,
     fontWeight: '500',

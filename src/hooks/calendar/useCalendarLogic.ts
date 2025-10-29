@@ -23,6 +23,8 @@ export type UseCalendarLogicReturn = {
   changeWeek: (direction: number) => void;
   /** 날짜 타일을 탭했을 때 호출 */
   selectDate: (day: number) => void;
+  /** 오늘 날짜로 이동 */
+  goToToday: () => void;
 
   // --- 계산된 데이터 ---
   /** * 스와이프 애니메이션을 위한 3개의 달력 매트릭스
@@ -66,6 +68,11 @@ export const useCalendarLogic = (
   const switchMode = (newMode: CalendarMode) => {
     setMode(newMode);
   };
+
+  const goToToday = useCallback(() => {
+    setSelectedDate(TODAY);
+    setViewMonth(TODAY);
+  }, []);
 
   // 헤더 버튼(월력)
   const changeMonth = useCallback(
@@ -237,6 +244,7 @@ export const useCalendarLogic = (
     changeMonth,
     changeWeek,
     selectDate,
+    goToToday,
 
     // 계산된 데이터
     matrices: {
