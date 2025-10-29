@@ -23,9 +23,7 @@ export const CALENDAR_STYLES = StyleSheet.create({
   calendarsRow: {
     flexDirection: 'row',
   },
-  calendar: {
-    paddingHorizontal: 20,
-  },
+
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',

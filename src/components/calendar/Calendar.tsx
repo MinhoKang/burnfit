@@ -88,7 +88,7 @@ const Calendar = () => {
               style={[CALENDAR_STYLES.calendarsRow, animatedCalendarsStyle]}
             >
               {/* 이전 달/주 */}
-              <View style={[CALENDAR_STYLES.calendar, { width }]}>
+              <View style={[{ width }]}>
                 {matrices.prev.map((row, rowIndex) => (
                   <CalendarItem
                     key={rowIndex}
@@ -108,7 +108,7 @@ const Calendar = () => {
               </View>
 
               {/* 현재 달/주 */}
-              <View style={[CALENDAR_STYLES.calendar, { width }]}>
+              <View style={[{ width }]}>
                 {matrices.current.map((row, rowIndex) => (
                   <CalendarItem
                     key={rowIndex}
@@ -124,7 +124,7 @@ const Calendar = () => {
               </View>
 
               {/* 다음 달/주 */}
-              <View style={[CALENDAR_STYLES.calendar, { width }]}>
+              <View style={[{ width }]}>
                 {matrices.next.map((row, rowIndex) => (
                   <CalendarItem
                     key={rowIndex}
