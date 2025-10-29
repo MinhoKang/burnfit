@@ -24,7 +24,8 @@ const Calendar = () => {
   } = logic;
 
   const { width } = Dimensions.get('window');
-  const dayWidth = (width - 40) / 7;
+  // 폴더블 대응: 너비 800px 이상일 때 50px로 설정
+  const dayWidth = width > 800 ? 50 : (width - 40) / 7;
 
   const animation = useCalendarAnimation(logic);
   const {
