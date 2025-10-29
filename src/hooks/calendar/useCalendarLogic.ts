@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { generateCalendarMatrix } from '../../helpers/calendar';
 import { formatMonthYear } from '../../utils/date';
+import { useSettingsStore } from '../../stores/useSettingStore';
 
 type CalendarMode = 'month' | 'week';
 export type CalendarMatrix = number[][];
@@ -58,6 +59,8 @@ export const useCalendarLogic = (
   const [viewMonth, setViewMonth] = useState<Date>(initialDate);
   // 주력, 월력 모드
   const [mode, setMode] = useState<CalendarMode>('month');
+
+  const { startOfWeek } = useSettingsStore();
 
   // 주력, 월력 모드 전환
   const switchMode = (newMode: CalendarMode) => {
@@ -148,17 +151,24 @@ export const useCalendarLogic = (
         ? generateCalendarMatrix(
             prevWeekDate.getFullYear(),
             prevWeekDate.getMonth(),
+            startOfWeek,
           )
         : generateCalendarMatrix(
             prevMonthDate.getFullYear(),
             prevMonthDate.getMonth(),
+            startOfWeek,
           ),
-    [mode, prevWeekDate, prevMonthDate],
+    [mode, prevWeekDate, prevMonthDate, startOfWeek],
   );
 
   const currentMatrix = useMemo(
-    () => generateCalendarMatrix(viewMonth.getFullYear(), viewMonth.getMonth()),
-    [viewMonth],
+    () =>
+      generateCalendarMatrix(
+        viewMonth.getFullYear(),
+        viewMonth.getMonth(),
+        startOfWeek,
+      ),
+    [viewMonth, startOfWeek],
   );
 
   const nextMatrix = useMemo(
@@ -167,12 +177,14 @@ export const useCalendarLogic = (
         ? generateCalendarMatrix(
             nextWeekDate.getFullYear(),
             nextWeekDate.getMonth(),
+            startOfWeek,
           )
         : generateCalendarMatrix(
             nextMonthDate.getFullYear(),
             nextMonthDate.getMonth(),
+            startOfWeek,
           ),
-    [mode, nextWeekDate, nextMonthDate],
+    [mode, nextWeekDate, nextMonthDate, startOfWeek],
   );
 
   // 현재 선택된 날짜의 주를 찾는 함수
@@ -182,7 +194,11 @@ export const useCalendarLogic = (
     const targetMonth = targetDate.getMonth();
     const targetYear = targetDate.getFullYear();
 
-    const targetMatrix = generateCalendarMatrix(targetYear, targetMonth);
+    const targetMatrix = generateCalendarMatrix(
+      targetYear,
+      targetMonth,
+      startOfWeek,
+    );
 
     for (let rowIndex = 0; rowIndex < targetMatrix.length; rowIndex++) {
       const row = targetMatrix[rowIndex];
@@ -198,7 +214,7 @@ export const useCalendarLogic = (
       }
     }
     return 0;
-  }, [mode, viewMonth, selectedDate]);
+  }, [mode, viewMonth, selectedDate, startOfWeek]);
 
   // 헤더 텍스트
   const headerText = useMemo(() => formatMonthYear(viewMonth), [viewMonth]);

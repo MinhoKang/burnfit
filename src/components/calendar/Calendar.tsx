@@ -1,13 +1,22 @@
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useCalendarLogic } from '../../hooks/calendar/useCalendarLogic';
 import { useCalendarAnimation } from '../../hooks/calendar/useCalendarAnimation';
-import { WEEK_DAYS } from '../../constants/date';
 import { COLORS } from '../../constants/colors';
 import { CALENDAR_STYLES } from './calendar.style';
 import { CalendarItem } from './CalendarItem';
+import { useSettingsStore } from '../../stores/useSettingStore';
+import { useMemo } from 'react';
+
+const WEEK_DAYS_SUN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEK_DAYS_MON = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const Calendar = () => {
   const logic = useCalendarLogic();
@@ -22,11 +31,17 @@ const Calendar = () => {
     dateHelpers,
     headerText,
   } = logic;
+  const { startOfWeek } = useSettingsStore();
 
-  const { width } = Dimensions.get('window');
+  const { width } = useWindowDimensions();
   const dayWidth = (width - 40) / 7;
 
-  const animation = useCalendarAnimation(logic);
+  const animation = useCalendarAnimation(logic, width);
+
+  const dynamicWeekDays = useMemo(() => {
+    return startOfWeek === 'monday' ? WEEK_DAYS_MON : WEEK_DAYS_SUN;
+  }, [startOfWeek]);
+
   const {
     panGesture,
     animatedCalendarContainerStyle,
@@ -57,7 +72,7 @@ const Calendar = () => {
 
       {/* 요일 헤더 */}
       <View style={CALENDAR_STYLES.weekHeader}>
-        {WEEK_DAYS.map((day, index) => (
+        {dynamicWeekDays.map((day, index) => (
           <View
             key={day}
             style={[CALENDAR_STYLES.dayContainer, { width: dayWidth }]}
@@ -65,8 +80,21 @@ const Calendar = () => {
             <Text
               style={[
                 CALENDAR_STYLES.headerText,
-                index === 0 && CALENDAR_STYLES.sundayText,
-                index === 6 && CALENDAR_STYLES.saturdayText,
+                // ✅ 일요일(startOfWeek: 0) 시작일 때:
+                startOfWeek === 'sunday' &&
+                  index === 0 &&
+                  CALENDAR_STYLES.sundayText, // 0번째(Sun)가 빨간색
+                startOfWeek === 'sunday' &&
+                  index === 6 &&
+                  CALENDAR_STYLES.saturdayText, // 6번째(Sat)가 파란색
+
+                // ✅ 월요일(startOfWeek: 1) 시작일 때:
+                startOfWeek === 'monday' &&
+                  index === 6 &&
+                  CALENDAR_STYLES.sundayText, // 6번째(Sun)가 빨간색
+                startOfWeek === 'monday' &&
+                  index === 5 &&
+                  CALENDAR_STYLES.saturdayText, // 5번째(Sat)가 파란색
               ]}
             >
               {day}

@@ -1,3 +1,4 @@
+import { StartDayOfWeek } from '../stores/useSettingStore';
 import { getDaysInMonth } from '../utils/date';
 
 export const isOtherMonthDay = (day: number | string): boolean => {
@@ -83,17 +84,24 @@ export const generateWeekCalendarMatrix = (date: Date): number[] => {
 export const generateCalendarMatrix = (
   year: number,
   month: number,
+  startOfWeek: StartDayOfWeek,
 ): number[][] => {
-  const firstDay = new Date(year, month, 1).getDay();
+  const firstDayIndexofMonth = new Date(year, month, 1).getDay();
+
+  // monday이면 0 -> 월요일, sunday이면 0 -> 일요일
+  const firstDayIndex =
+    startOfWeek === 'monday'
+      ? (firstDayIndexofMonth + 6) % 7
+      : firstDayIndexofMonth;
   const maxDays = getDaysInMonth(year, month);
   const prevMonthDays = getDaysInMonth(year, month - 1);
 
-  const totalCells = firstDay + maxDays;
+  const totalCells = firstDayIndex + maxDays;
   const weeksNeeded = Math.ceil(totalCells / 7);
 
   const dateRows = Array.from({ length: weeksNeeded }, (_, rowIndex) => {
     return Array.from({ length: 7 }, (__, colIndex) => {
-      const dayNumber = rowIndex * 7 + colIndex - firstDay + 1;
+      const dayNumber = rowIndex * 7 + colIndex - firstDayIndex + 1;
 
       if (dayNumber < 1) {
         return -(prevMonthDays + dayNumber);

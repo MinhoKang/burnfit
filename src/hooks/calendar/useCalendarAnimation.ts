@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Dimensions } from 'react-native';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -49,7 +48,10 @@ const useAnimatedRowStyle = (
   return style;
 };
 
-export const useCalendarAnimation = (logic: UseCalendarLogicReturn) => {
+export const useCalendarAnimation = (
+  logic: UseCalendarLogicReturn,
+  width: number,
+) => {
   const {
     mode,
     viewMonth,
@@ -58,7 +60,6 @@ export const useCalendarAnimation = (logic: UseCalendarLogicReturn) => {
     changeMonth,
     changeWeek,
   } = logic;
-  const { width } = Dimensions.get('window');
 
   const calendarHeight = useSharedValue(CALENDAR_HEIGHT_MONTH);
   const dragProgress = useSharedValue(0); // 0: month, 1: week
