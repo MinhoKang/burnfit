@@ -9,8 +9,33 @@ import { useSettingsStore } from '../stores/useSettingStore';
 import { COLORS, getThemeColors } from '../constants/colors';
 import { useShallow } from 'zustand/react/shallow';
 import { NavigationContainer } from '@react-navigation/native';
+import { useMemo } from 'react';
 
 const Tab = createBottomTabNavigator();
+
+const renderHomeIcon = ({ color, size }: { color: string; size: number }) => (
+  <MaterialCommunityIcons name="home" color={color} size={size} />
+);
+
+const renderCalendarIcon = ({
+  color,
+  size,
+}: {
+  color: string;
+  size: number;
+}) => <Ionicons name="calendar-outline" color={color} size={size} />;
+
+const renderLibraryIcon = ({
+  color,
+  size,
+}: {
+  color: string;
+  size: number;
+}) => <MaterialCommunityIcons name="dumbbell" color={color} size={size} />;
+
+const renderMyPageIcon = ({ color, size }: { color: string; size: number }) => (
+  <Ionicons name="person-outline" color={color} size={size} />
+);
 
 interface BottomTabNavigationsProps {
   theme?: any;
@@ -20,12 +45,16 @@ const BottomTabNavigations = ({ theme }: BottomTabNavigationsProps) => {
   const themeMode = useSettingsStore(useShallow(state => state.themeMode));
   const themeColors = getThemeColors(themeMode);
 
+  const tabBarActiveTintColor = useMemo(() => {
+    return themeMode === 'light' ? themeColors.TEXT : COLORS.LIGHT_BLUE;
+  }, [themeMode, themeColors]);
+
   return (
     <NavigationContainer theme={theme}>
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: COLORS.LIGHT_BLUE,
+          tabBarActiveTintColor,
           tabBarInactiveTintColor:
             themeMode === 'dark'
               ? themeColors.TEXT
@@ -46,9 +75,7 @@ const BottomTabNavigations = ({ theme }: BottomTabNavigationsProps) => {
           component={HomeScreen}
           options={{
             title: 'HOME',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
+            tabBarIcon: renderHomeIcon,
           }}
         />
         <Tab.Screen
@@ -56,9 +83,7 @@ const BottomTabNavigations = ({ theme }: BottomTabNavigationsProps) => {
           component={CalendarScreen}
           options={{
             title: 'CALENDAR',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="calendar-outline" color={color} size={size} />
-            ),
+            tabBarIcon: renderCalendarIcon,
           }}
         />
         <Tab.Screen
@@ -66,13 +91,7 @@ const BottomTabNavigations = ({ theme }: BottomTabNavigationsProps) => {
           component={LibraryScreen}
           options={{
             title: 'LIBRARY',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="dumbbell"
-                color={color}
-                size={size}
-              />
-            ),
+            tabBarIcon: renderLibraryIcon,
           }}
         />
         <Tab.Screen
@@ -80,9 +99,7 @@ const BottomTabNavigations = ({ theme }: BottomTabNavigationsProps) => {
           component={MyPageScreen}
           options={{
             title: 'MY PAGE',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person-outline" color={color} size={size} />
-            ),
+            tabBarIcon: renderMyPageIcon,
           }}
         />
       </Tab.Navigator>
