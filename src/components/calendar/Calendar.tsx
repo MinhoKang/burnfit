@@ -1,10 +1,7 @@
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Animated from 'react-native-reanimated';
-import {
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import { GestureDetector } from 'react-native-gesture-handler';
 import { useCalendarLogic } from '../../hooks/calendar/useCalendarLogic';
 import { useCalendarAnimation } from '../../hooks/calendar/useCalendarAnimation';
 import { WEEK_DAYS } from '../../constants/date';
@@ -38,115 +35,111 @@ const Calendar = () => {
   } = animation;
 
   return (
-    <GestureHandlerRootView style={CALENDAR_STYLES.root}>
-      <View style={CALENDAR_STYLES.container}>
-        {/* 헤더 */}
-        <View style={CALENDAR_STYLES.header}>
-          <TouchableOpacity
-            onPress={() =>
-              mode === 'month' ? changeMonth(-1) : changeWeek(-1)
-            }
-          >
-            <Ionicons name="chevron-back" size={24} color={COLORS.LIGHT_BLUE} />
-          </TouchableOpacity>
-          <Text style={CALENDAR_STYLES.monthYear}>{headerText}</Text>
-          <TouchableOpacity
-            onPress={() => (mode === 'month' ? changeMonth(1) : changeWeek(1))}
-          >
-            <Ionicons
-              name="chevron-forward"
-              size={24}
-              color={COLORS.LIGHT_BLUE}
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* 요일 헤더 */}
-        <View style={CALENDAR_STYLES.weekHeader}>
-          {WEEK_DAYS.map((day, index) => (
-            <View
-              key={day}
-              style={[CALENDAR_STYLES.dayContainer, { width: dayWidth }]}
-            >
-              <Text
-                style={[
-                  CALENDAR_STYLES.headerText,
-                  index === 0 && CALENDAR_STYLES.sundayText,
-                  index === 6 && CALENDAR_STYLES.saturdayText,
-                ]}
-              >
-                {day}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {/* 캘린더 (제스처 + 애니메이션) */}
-        <GestureDetector gesture={panGesture}>
-          <Animated.View style={animatedCalendarContainerStyle}>
-            <Animated.View
-              style={[CALENDAR_STYLES.calendarsRow, animatedCalendarsStyle]}
-            >
-              {/* 이전 달/주 */}
-              <View style={[{ width }]}>
-                {matrices.prev.map((row, rowIndex) => (
-                  <CalendarItem
-                    key={rowIndex}
-                    rowIndex={rowIndex}
-                    row={row}
-                    monthDate={
-                      mode === 'week'
-                        ? dateHelpers.prevWeekDate
-                        : dateHelpers.prevMonthDate
-                    }
-                    selectedDate={selectedDate}
-                    selectDate={selectDate}
-                    dayWidth={dayWidth}
-                    rowStyles={rowStyles}
-                  />
-                ))}
-              </View>
-
-              {/* 현재 달/주 */}
-              <View style={[{ width }]}>
-                {matrices.current.map((row, rowIndex) => (
-                  <CalendarItem
-                    key={rowIndex}
-                    rowIndex={rowIndex}
-                    row={row}
-                    monthDate={viewMonth}
-                    selectedDate={selectedDate}
-                    selectDate={selectDate}
-                    dayWidth={dayWidth}
-                    rowStyles={rowStyles}
-                  />
-                ))}
-              </View>
-
-              {/* 다음 달/주 */}
-              <View style={[{ width }]}>
-                {matrices.next.map((row, rowIndex) => (
-                  <CalendarItem
-                    key={rowIndex}
-                    rowIndex={rowIndex}
-                    row={row}
-                    monthDate={
-                      mode === 'week'
-                        ? dateHelpers.nextWeekDate
-                        : dateHelpers.nextMonthDate
-                    }
-                    selectedDate={selectedDate}
-                    selectDate={selectDate}
-                    dayWidth={dayWidth}
-                    rowStyles={rowStyles}
-                  />
-                ))}
-              </View>
-            </Animated.View>
-          </Animated.View>
-        </GestureDetector>
+    <View style={CALENDAR_STYLES.container}>
+      {/* 헤더 */}
+      <View style={CALENDAR_STYLES.header}>
+        <TouchableOpacity
+          onPress={() => (mode === 'month' ? changeMonth(-1) : changeWeek(-1))}
+        >
+          <Ionicons name="chevron-back" size={24} color={COLORS.LIGHT_BLUE} />
+        </TouchableOpacity>
+        <Text style={CALENDAR_STYLES.monthYear}>{headerText}</Text>
+        <TouchableOpacity
+          onPress={() => (mode === 'month' ? changeMonth(1) : changeWeek(1))}
+        >
+          <Ionicons
+            name="chevron-forward"
+            size={24}
+            color={COLORS.LIGHT_BLUE}
+          />
+        </TouchableOpacity>
       </View>
-    </GestureHandlerRootView>
+
+      {/* 요일 헤더 */}
+      <View style={CALENDAR_STYLES.weekHeader}>
+        {WEEK_DAYS.map((day, index) => (
+          <View
+            key={day}
+            style={[CALENDAR_STYLES.dayContainer, { width: dayWidth }]}
+          >
+            <Text
+              style={[
+                CALENDAR_STYLES.headerText,
+                index === 0 && CALENDAR_STYLES.sundayText,
+                index === 6 && CALENDAR_STYLES.saturdayText,
+              ]}
+            >
+              {day}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      {/* 캘린더 (제스처 + 애니메이션) */}
+      <GestureDetector gesture={panGesture}>
+        <Animated.View style={animatedCalendarContainerStyle}>
+          <Animated.View
+            style={[CALENDAR_STYLES.calendarsRow, animatedCalendarsStyle]}
+          >
+            {/* 이전 달/주 */}
+            <View style={[{ width }]}>
+              {matrices.prev.map((row, rowIndex) => (
+                <CalendarItem
+                  key={rowIndex}
+                  rowIndex={rowIndex}
+                  row={row}
+                  monthDate={
+                    mode === 'week'
+                      ? dateHelpers.prevWeekDate
+                      : dateHelpers.prevMonthDate
+                  }
+                  selectedDate={selectedDate}
+                  selectDate={selectDate}
+                  dayWidth={dayWidth}
+                  rowStyles={rowStyles}
+                />
+              ))}
+            </View>
+
+            {/* 현재 달/주 */}
+            <View style={[{ width }]}>
+              {matrices.current.map((row, rowIndex) => (
+                <CalendarItem
+                  key={rowIndex}
+                  rowIndex={rowIndex}
+                  row={row}
+                  monthDate={viewMonth}
+                  selectedDate={selectedDate}
+                  selectDate={selectDate}
+                  dayWidth={dayWidth}
+                  rowStyles={rowStyles}
+                />
+              ))}
+            </View>
+
+            {/* 다음 달/주 */}
+            <View style={[{ width }]}>
+              {matrices.next.map((row, rowIndex) => (
+                <CalendarItem
+                  key={rowIndex}
+                  rowIndex={rowIndex}
+                  row={row}
+                  monthDate={
+                    mode === 'week'
+                      ? dateHelpers.nextWeekDate
+                      : dateHelpers.nextMonthDate
+                  }
+                  selectedDate={selectedDate}
+                  selectDate={selectDate}
+                  dayWidth={dayWidth}
+                  rowStyles={rowStyles}
+                />
+              ))}
+            </View>
+          </Animated.View>
+        </Animated.View>
+      </GestureDetector>
+    </View>
   );
 };
 
