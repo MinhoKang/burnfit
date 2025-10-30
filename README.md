@@ -11,7 +11,7 @@
 
 ## 영상
 ### Fold(Google Pixel Fold)
-<img src="https://github.com/user-attachments/assets/9522a6a9-11b8-4f59-847f-c4d3b93cb353" alt="demo" width="600">
+<img src="https://github.com/user-attachments/assets/9522a6a9-11b8-4f59-847f-c4d3b93cb353" alt="demo" width="600">   
 - 폴드 테스트
 [untitled.webm](https://github.com/user-attachments/assets/a611b026-2806-4f25-8cc0-5242154692f8)
 
