@@ -12,10 +12,12 @@
 ## 영상
 ### Fold(Google Pixel Fold)
 <img src="https://github.com/user-attachments/assets/9522a6a9-11b8-4f59-847f-c4d3b93cb353" alt="demo" width="600">
+- 폴드 테스트
+[untitled.webm](https://github.com/user-attachments/assets/a611b026-2806-4f25-8cc0-5242154692f8)
 
 ### ios(iPhone 17 Pro)
+https://github.com/user-attachments/assets/6ec30588-28e4-404b-adaf-b38ee595dc3c
 
-<img src="https://github.com/user-attachments/assets/e374f22a-11e5-445f-b1b5-579ac1fa8ae0" alt="demo" width="600">
 
 ## 시작 요일 설정 + 다크모드
 
