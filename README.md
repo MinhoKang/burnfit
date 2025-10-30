@@ -19,7 +19,7 @@ task
 
 ### Fold(Google Pixel Fold)
 
-<img src="https://github.com/user-attachments/assets/3dd8b8a2-d564-4a0e-a2e5-d9d73a9fcc39" alt="demo" width="600">
+<img src="https://github.com/user-attachments/assets/3dd8b8a2-d564-4a0e-a2e5-d9d73a9fcc39" alt="demo" >
 
 folding test
 <img src="https://github.com/user-attachments/assets/ea76a3f9-392d-4c8f-b2d0-090c913fb433" alt="demo" width="600">
