@@ -107,3 +107,20 @@ export const generateCalendarMatrix = (
 
   return dateRows;
 };
+
+// 타겟 날짜의 주 인덱스를 찾는 함수
+export const findTargetWeekIndex = (
+  matrix: number[][],
+  targetDate: Date,
+): number => {
+  const targetDay = targetDate.getDate();
+  for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
+    const row = matrix[rowIndex];
+    for (const day of row) {
+      if (day === targetDay) {
+        return rowIndex;
+      }
+    }
+  }
+  return 0;
+};
