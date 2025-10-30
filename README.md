@@ -19,11 +19,11 @@ task
 
 ### Fold(Google Pixel Fold)
 
-<img src="https://github.com/user-attachments/assets/96a3bf8f-d286-4a96-9134-8153ed0e84b0" alt="demo" width="600">
+<img src="https://github.com/user-attachments/assets/3dd8b8a2-d564-4a0e-a2e5-d9d73a9fcc39" alt="demo" width="600">
 
 ### ios(iPhone 17 Pro)
 
-<img src="https://github.com/user-attachments/assets/21dcfb2d-ba5c-45ae-aca7-c6a4aff05e09" alt="demo" width="600">
+<img src="https://github.com/user-attachments/assets/d0f99535-d4f7-4ae9-9a90-3b81e8d97dc0" alt="demo" width="600">
 
 ## 주요 기능
 
