@@ -21,6 +21,9 @@ task
 
 <img src="https://github.com/user-attachments/assets/3dd8b8a2-d564-4a0e-a2e5-d9d73a9fcc39" alt="demo" width="600">
 
+folding test
+<img src="https://github.com/user-attachments/assets/ea76a3f9-392d-4c8f-b2d0-090c913fb433" alt="demo" width="600">
+
 ### ios(iPhone 17 Pro)
 
 <img src="https://github.com/user-attachments/assets/d0f99535-d4f7-4ae9-9a90-3b81e8d97dc0" alt="demo" width="600">
