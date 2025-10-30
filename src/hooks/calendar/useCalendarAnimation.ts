@@ -11,6 +11,7 @@ import {
 import { scheduleOnRN } from 'react-native-worklets';
 import { Gesture } from 'react-native-gesture-handler';
 import { UseCalendarLogicReturn } from './useCalendarLogic';
+import { Dimensions } from 'react-native';
 
 const CALENDAR_HEIGHT_MONTH = 300;
 const CALENDAR_HEIGHT_WEEK = 60;
@@ -48,10 +49,7 @@ const useAnimatedRowStyle = (
   return style;
 };
 
-export const useCalendarAnimation = (
-  logic: UseCalendarLogicReturn,
-  width: number,
-) => {
+export const useCalendarAnimation = (logic: UseCalendarLogicReturn) => {
   const {
     mode,
     viewMonth,
@@ -62,6 +60,8 @@ export const useCalendarAnimation = (
     prevWeekIndex,
     nextWeekIndex,
   } = logic;
+
+  const { width } = Dimensions.get('window');
 
   const calendarHeight = useSharedValue(CALENDAR_HEIGHT_MONTH);
   const dragProgress = useSharedValue(0); // 0: month, 1: week
