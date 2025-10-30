@@ -1,4 +1,4 @@
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
@@ -8,6 +8,7 @@ import { WEEK_DAYS } from '../../constants/date';
 import { COLORS } from '../../constants/colors';
 import { CALENDAR_STYLES } from './calendar.style';
 import { CalendarItem } from './CalendarItem';
+import { useCalendarWidth } from '../../hooks/calendar/useCalendarWidth';
 
 const Calendar = () => {
   const logic = useCalendarLogic();
@@ -22,12 +23,9 @@ const Calendar = () => {
     dateHelpers,
     headerText,
   } = logic;
+  const { screenWidth, dayWidth } = useCalendarWidth();
 
-  const { width } = Dimensions.get('window');
-  // 폴더블 대응: 너비 800px 이상일 때 50px로 설정
-  const dayWidth = width > 800 ? 50 : (width - 40) / 7;
-
-  const animation = useCalendarAnimation(logic);
+  const animation = useCalendarAnimation(logic, screenWidth);
   const {
     panGesture,
     animatedCalendarContainerStyle,
@@ -85,7 +83,7 @@ const Calendar = () => {
             style={[CALENDAR_STYLES.calendarsRow, animatedCalendarsStyle]}
           >
             {/* 이전 달/주 */}
-            <View style={[{ width }]}>
+            <View style={[{ width: screenWidth }]}>
               {matrices.prev.map((row, rowIndex) => (
                 <CalendarItem
                   key={rowIndex}
@@ -105,7 +103,7 @@ const Calendar = () => {
             </View>
 
             {/* 현재 달/주 */}
-            <View style={[{ width }]}>
+            <View style={[{ width: screenWidth }]}>
               {matrices.current.map((row, rowIndex) => (
                 <CalendarItem
                   key={rowIndex}
@@ -121,7 +119,7 @@ const Calendar = () => {
             </View>
 
             {/* 다음 달/주 */}
-            <View style={[{ width }]}>
+            <View style={[{ width: screenWidth }]}>
               {matrices.next.map((row, rowIndex) => (
                 <CalendarItem
                   key={rowIndex}

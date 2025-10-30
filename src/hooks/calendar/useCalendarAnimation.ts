@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Dimensions } from 'react-native';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -49,7 +48,10 @@ const useAnimatedRowStyle = (
   return style;
 };
 
-export const useCalendarAnimation = (logic: UseCalendarLogicReturn) => {
+export const useCalendarAnimation = (
+  logic: UseCalendarLogicReturn,
+  width: number,
+) => {
   const {
     mode,
     viewMonth,
@@ -60,7 +62,6 @@ export const useCalendarAnimation = (logic: UseCalendarLogicReturn) => {
     prevWeekIndex,
     nextWeekIndex,
   } = logic;
-  const { width } = Dimensions.get('window');
 
   const calendarHeight = useSharedValue(CALENDAR_HEIGHT_MONTH);
   const dragProgress = useSharedValue(0); // 0: month, 1: week
@@ -131,9 +132,9 @@ export const useCalendarAnimation = (logic: UseCalendarLogicReturn) => {
     }
   }, [mode, calendarHeight, dragProgress]);
 
-  // viewMonth가 변경되면 translateX를 리셋
+  // viewMonth가 변경되면 translateX를 리셋 (month/week navigation)
   useEffect(() => {
-    translateX.value = -width;
+    translateX.value = withTiming(-width, { duration: 0 });
   }, [viewMonth, width, translateX]);
 
   const panGesture = Gesture.Pan()
