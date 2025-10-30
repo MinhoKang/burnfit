@@ -59,6 +59,8 @@ export const useCalendarAnimation = (
     switchMode,
     changeMonth,
     changeWeek,
+    prevWeekIndex,
+    nextWeekIndex,
   } = logic;
 
   const calendarHeight = useSharedValue(CALENDAR_HEIGHT_MONTH);
@@ -80,23 +82,32 @@ export const useCalendarAnimation = (
     };
   });
 
-  // 각 주 애니메이션
-  const row0Style = useAnimatedRowStyle(0, selectedWeekIndex, dragProgress);
-  const row1Style = useAnimatedRowStyle(1, selectedWeekIndex, dragProgress);
-  const row2Style = useAnimatedRowStyle(2, selectedWeekIndex, dragProgress);
-  const row3Style = useAnimatedRowStyle(3, selectedWeekIndex, dragProgress);
-  const row4Style = useAnimatedRowStyle(4, selectedWeekIndex, dragProgress);
-  const row5Style = useAnimatedRowStyle(5, selectedWeekIndex, dragProgress);
-
-  const rowStyles = [
-    row0Style,
-    row1Style,
-    row2Style,
-    row3Style,
-    row4Style,
-    row5Style,
+  const prevRowStyles = [
+    useAnimatedRowStyle(0, prevWeekIndex, dragProgress),
+    useAnimatedRowStyle(1, prevWeekIndex, dragProgress),
+    useAnimatedRowStyle(2, prevWeekIndex, dragProgress),
+    useAnimatedRowStyle(3, prevWeekIndex, dragProgress),
+    useAnimatedRowStyle(4, prevWeekIndex, dragProgress),
+    useAnimatedRowStyle(5, prevWeekIndex, dragProgress),
   ];
 
+  const currentRowStyles = [
+    useAnimatedRowStyle(0, selectedWeekIndex, dragProgress),
+    useAnimatedRowStyle(1, selectedWeekIndex, dragProgress),
+    useAnimatedRowStyle(2, selectedWeekIndex, dragProgress),
+    useAnimatedRowStyle(3, selectedWeekIndex, dragProgress),
+    useAnimatedRowStyle(4, selectedWeekIndex, dragProgress),
+    useAnimatedRowStyle(5, selectedWeekIndex, dragProgress),
+  ];
+
+  const nextRowStyles = [
+    useAnimatedRowStyle(0, nextWeekIndex, dragProgress),
+    useAnimatedRowStyle(1, nextWeekIndex, dragProgress),
+    useAnimatedRowStyle(2, nextWeekIndex, dragProgress),
+    useAnimatedRowStyle(3, nextWeekIndex, dragProgress),
+    useAnimatedRowStyle(4, nextWeekIndex, dragProgress),
+    useAnimatedRowStyle(5, nextWeekIndex, dragProgress),
+  ];
   // mode가 변경되면 calendarHeight와 dragProgress를 변경
   useEffect(() => {
     if (mode === 'month') {
@@ -242,6 +253,8 @@ export const useCalendarAnimation = (
     panGesture,
     animatedCalendarContainerStyle,
     animatedCalendarsStyle,
-    rowStyles,
+    prevRowStyles,
+    currentRowStyles,
+    nextRowStyles,
   };
 };

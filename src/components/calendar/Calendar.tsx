@@ -58,7 +58,9 @@ const Calendar = () => {
     panGesture,
     animatedCalendarContainerStyle,
     animatedCalendarsStyle,
-    rowStyles,
+    prevRowStyles,
+    currentRowStyles,
+    nextRowStyles,
   } = animation;
 
   return (
@@ -148,7 +150,7 @@ const Calendar = () => {
                   selectedDate={selectedDate}
                   selectDate={selectDate}
                   dayWidth={dayWidth}
-                  rowStyles={rowStyles}
+                  rowStyles={prevRowStyles}
                   themeMode={themeMode}
                 />
               ))}
@@ -165,7 +167,7 @@ const Calendar = () => {
                   selectedDate={selectedDate}
                   selectDate={selectDate}
                   dayWidth={dayWidth}
-                  rowStyles={rowStyles}
+                  rowStyles={currentRowStyles}
                   themeMode={themeMode}
                 />
               ))}
@@ -186,7 +188,7 @@ const Calendar = () => {
                   selectedDate={selectedDate}
                   selectDate={selectDate}
                   dayWidth={dayWidth}
-                  rowStyles={rowStyles}
+                  rowStyles={nextRowStyles}
                   themeMode={themeMode}
                 />
               ))}

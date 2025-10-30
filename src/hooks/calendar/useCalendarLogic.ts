@@ -1,5 +1,8 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { generateCalendarMatrix } from '../../helpers/calendar';
+import {
+  findTargetWeekIndex,
+  generateCalendarMatrix,
+} from '../../helpers/calendar';
 import { formatMonthYear } from '../../utils/date';
 import { useSettingsStore } from '../../stores/useSettingStore';
 
@@ -13,6 +16,10 @@ export type UseCalendarLogicReturn = {
   viewMonth: Date;
   /** 사용자가 마지막으로 탭(선택)한 날짜 */
   selectedDate: Date;
+  /** (주간 모드) 이전 캘린더의 주 인덱스 */
+  prevWeekIndex: number;
+  /** (주간 모드) 다음 캘린더의 주 인덱스 */
+  nextWeekIndex: number;
 
   // --- 상태 변경 함수 ---
   /** 캘린더 모드를 'month' 또는 'week'로 변경 */
@@ -197,31 +204,22 @@ export const useCalendarLogic = (
   // 현재 선택된 날짜의 주를 찾는 함수
   const selectedWeekIndex = useMemo(() => {
     const targetDate = mode === 'week' ? viewMonth : selectedDate;
-    const targetDay = targetDate.getDate();
-    const targetMonth = targetDate.getMonth();
-    const targetYear = targetDate.getFullYear();
+    return findTargetWeekIndex(currentMatrix, targetDate);
+  }, [mode, viewMonth, selectedDate, currentMatrix]);
 
-    const targetMatrix = generateCalendarMatrix(
-      targetYear,
-      targetMonth,
-      startOfWeek,
-    );
+  const prevWeekIndex = useMemo(() => {
+    // 월간 모드일 때는 값이 무의미하므로 0 반환
+    if (mode === 'month') return 0;
 
-    for (let rowIndex = 0; rowIndex < targetMatrix.length; rowIndex++) {
-      const row = targetMatrix[rowIndex];
-      for (const day of row) {
-        if (
-          typeof day === 'number' &&
-          day > 0 &&
-          day < 100 &&
-          day === targetDay
-        ) {
-          return rowIndex;
-        }
-      }
-    }
-    return 0;
-  }, [mode, viewMonth, selectedDate, startOfWeek]);
+    return findTargetWeekIndex(prevMatrix, prevWeekDate);
+  }, [mode, prevWeekDate, prevMatrix]);
+
+  const nextWeekIndex = useMemo(() => {
+    // 월간 모드일 때는 값이 무의미하므로 0 반환
+    if (mode === 'month') return 0;
+
+    return findTargetWeekIndex(nextMatrix, nextWeekDate);
+  }, [mode, nextWeekDate, nextMatrix]);
 
   // 헤더 텍스트
   const headerText = useMemo(() => formatMonthYear(viewMonth), [viewMonth]);
@@ -238,6 +236,8 @@ export const useCalendarLogic = (
     mode,
     viewMonth,
     selectedDate,
+    prevWeekIndex,
+    nextWeekIndex,
 
     // 상태 변경 함수
     switchMode,
