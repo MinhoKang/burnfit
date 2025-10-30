@@ -11,7 +11,7 @@
 
 ## 영상
 ### Fold(Google Pixel Fold)
-<img src="https://github.com/user-attachments/assets/7fdba0b5-fc83-4677-84ac-286cd930aa92" alt="demo" width="600">
+<img src="https://github.com/user-attachments/assets/9522a6a9-11b8-4f59-847f-c4d3b93cb353" alt="demo" width="600">
 
 ### ios(iPhone 17 Pro)
 
