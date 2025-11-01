@@ -387,20 +387,34 @@ const useAnimatedRowStyle = (rowIndex, selectedWeekIndex, dragProgress) => {
 **6개 행에 대한 스타일 생성**:
 
 ```typescript
-const row0Style = useAnimatedRowStyle(0, selectedWeekIndex, dragProgress);
-const row1Style = useAnimatedRowStyle(1, selectedWeekIndex, dragProgress);
-const row2Style = useAnimatedRowStyle(2, selectedWeekIndex, dragProgress);
-const row3Style = useAnimatedRowStyle(3, selectedWeekIndex, dragProgress);
-const row4Style = useAnimatedRowStyle(4, selectedWeekIndex, dragProgress);
-const row5Style = useAnimatedRowStyle(5, selectedWeekIndex, dragProgress);
+// 이전 캘린더의 6개 행 스타일 (prevWeekIndex 기준)
+const prevRowStyles = [
+  useAnimatedRowStyle(0, prevWeekIndex, dragProgress),
+  useAnimatedRowStyle(1, prevWeekIndex, dragProgress),
+  useAnimatedRowStyle(2, prevWeekIndex, dragProgress),
+  useAnimatedRowStyle(3, prevWeekIndex, dragProgress),
+  useAnimatedRowStyle(4, prevWeekIndex, dragProgress),
+  useAnimatedRowStyle(5, prevWeekIndex, dragProgress),
+];
 
-const rowStyles = [
-  row0Style,
-  row1Style,
-  row2Style,
-  row3Style,
-  row4Style,
-  row5Style,
+// 현재 캘린더의 6개 행 스타일 (selectedWeekIndex 기준)
+const currentRowStyles = [
+  useAnimatedRowStyle(0, selectedWeekIndex, dragProgress),
+  useAnimatedRowStyle(1, selectedWeekIndex, dragProgress),
+  useAnimatedRowStyle(2, selectedWeekIndex, dragProgress),
+  useAnimatedRowStyle(3, selectedWeekIndex, dragProgress),
+  useAnimatedRowStyle(4, selectedWeekIndex, dragProgress),
+  useAnimatedRowStyle(5, selectedWeekIndex, dragProgress),
+];
+
+// 다음 캘린더의 6개 행 스타일 (nextWeekIndex 기준)
+const nextRowStyles = [
+  useAnimatedRowStyle(0, nextWeekIndex, dragProgress),
+  useAnimatedRowStyle(1, nextWeekIndex, dragProgress),
+  useAnimatedRowStyle(2, nextWeekIndex, dragProgress),
+  useAnimatedRowStyle(3, nextWeekIndex, dragProgress),
+  useAnimatedRowStyle(4, nextWeekIndex, dragProgress),
+  useAnimatedRowStyle(5, nextWeekIndex, dragProgress),
 ];
 ```
 
